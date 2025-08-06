@@ -6,7 +6,6 @@ import { GoogleGenAI } from '@google/genai';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -32,7 +31,7 @@ connectDB();
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // Mongoose Models
-// User schema now uses 'email' instead of 'username'
+
 const User = mongoose.model(
   'User',
   new mongoose.Schema({
@@ -69,10 +68,8 @@ const auth = (req, res, next) => {
   }
 };
 
-// --- API Routes ---
-
 // @route   POST /api/register
-// @desc    Register a new user
+
 app.post('/api/register', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -103,7 +100,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 // @route   POST /api/login
-// @desc    Authenticate user & get token
+
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -132,7 +129,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // @route   GET /api/chats
-// @desc    Get all chat sessions for the authenticated user
+
 app.get('/api/chats', auth, async (req, res) => {
   try {
     const chats = await Chat.find({ userId: req.user.id }).sort({
@@ -146,7 +143,7 @@ app.get('/api/chats', auth, async (req, res) => {
 });
 
 // @route   POST /api/chat
-// @desc    Send a prompt to Gemini and save the new history
+
 app.post('/api/chat', auth, async (req, res) => {
   const { prompt, chatId } = req.body;
   try {
@@ -158,7 +155,6 @@ app.post('/api/chat', auth, async (req, res) => {
       await currentChat.save();
     }
 
-    // The final fix: Force a deep clone to a plain JS object
     const clonedHistory = JSON.parse(JSON.stringify(currentChat.history));
 
     const chat = ai.chats.create({
@@ -168,7 +164,6 @@ app.post('/api/chat', auth, async (req, res) => {
 
     const result = await chat.sendMessage({ message: prompt });
 
-    // Save the new, clean history
     const simpleHistory = chat.history.map((msg) => ({
       role: msg.role,
       parts: msg.parts.map((part) => ({ text: part.text })),

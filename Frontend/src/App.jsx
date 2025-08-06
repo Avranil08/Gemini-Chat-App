@@ -27,16 +27,16 @@ function ChatList({ chats, selectChat, selectedIndex, createNewChat }) {
   );
 }
 
-// AuthForm now uses 'email' everywhere
+
 function AuthForm({ type, onSubmit }) {
-  const [email, setEmail] = useState(''); // Corrected variable name
+  const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    await onSubmit({ email, password, setError }); // Pass 'email' to the handler
+    await onSubmit({ email, password, setError }); 
   };
 
   return (
@@ -127,7 +127,7 @@ export default function App() {
     setLoading(false);
   };
   
-  // handleLogin now sends 'email'
+  
   const handleLogin = async ({ email, password, setError }) => {
     try {
       const res = await fetch('http://localhost:3001/api/login', {
@@ -149,7 +149,7 @@ export default function App() {
     }
   };
 
-  // handleRegister now sends 'email'
+  
   const handleRegister = async ({ email, password, setError }) => {
     try {
       const res = await fetch('http://localhost:3001/api/register', {
